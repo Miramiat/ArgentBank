@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
+import { logoutUser } from '../features/auth/authSlice'; // Import de l'action de déconnexion
 import Header from '../Components/Header';
 import Footer from '../Components/Footer';
 import Account from '../Components/Account';
@@ -8,20 +9,28 @@ import '../designs/css/main.css';
 
 function UserProfile() {
   const { user, error } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirigez vers la page précédente s'il y en a une, sinon vers /signin
+    // Redirigez vers la page précédente s'il n'y a pas d'utilisateur connecté
     if (!user) {
       navigate(-1, { replace: true });
     }
   }, [user, navigate]);
 
+  const { userName } = user ?? {};
+
+  const handleLogout = () => {
+    // Dispatchez l'action de déconnexion
+    dispatch(logoutUser());
+    // Redirigez l'utilisateur vers la page d'accueil
+    navigate('/');
+  };
+
   if (!user) {
     return null;
   }
-
-  const { userName } = user ?? {};
 
   return (
     <>
@@ -29,13 +38,20 @@ function UserProfile() {
 
       <main className="main bg-dark">
         <div className="header">
-          <h1>Welcome back<br />{userName}!</h1>
-          <button className="edit-button">Edit Name</button>
+          <h1>
+            Welcome back<br />
+            {userName}!
+          </h1>
+          <Link to="/update-profile">
+            <button className="edit-button">Edit Name</button>
+          </Link>
+          <button className="sign-out-button" onClick={handleLogout}>
+            Sign Out
+          </button>
         </div>
 
         <h2 className="sr-only">Accounts</h2>
 
-        {/* Utilisez le composant Account pour chaque compte */}
         <Account
           title="Argent Bank Checking (x8349)"
           amount="$2,082.79"
@@ -61,3 +77,9 @@ function UserProfile() {
 }
 
 export default UserProfile;
+
+
+
+
+
+

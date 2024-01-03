@@ -1,10 +1,12 @@
+// App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 import Home from './Pages/Home';
 import SignIn from './Pages/sign-in';
 import UserProfile from './Pages/user';
-import store from './redux/store'; 
-import { Provider } from 'react-redux';
+import UpdateProfile from './Pages/update-profile'; // Importez votre composant UpdateProfile
 
 function App() {
   // Récupérez le token depuis le store Redux
@@ -23,6 +25,11 @@ function App() {
           <Route
             path="/user"
             element={isAuthenticated() ? <UserProfile /> : <Navigate to="/sign-in" />}
+          />
+          {/* Ajoutez une route pour la mise à jour du profil */}
+          <Route
+            path="/update-profile"
+            element={isAuthenticated() ? <UpdateProfile /> : <Navigate to="/sign-in" />}
           />
         </Routes>
       </Router>

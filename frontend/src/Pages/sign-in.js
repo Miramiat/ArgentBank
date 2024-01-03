@@ -2,7 +2,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setFormData, loginUser, loginUserSuccess, loginUserFailure, fetchUserProfile } from '../features/auth/authSlice';
+import { setFormData, loginUserSuccess, updateUserProfile } from '../features/auth/authSlice'; // Mettez à jour les imports ici
+import { Link } from 'react-router-dom';
 // Autres imports...
 
 import Button from '../Components/Button';
@@ -24,7 +25,7 @@ function SignIn() {
       };
 
       // Appel de l'action asynchrone loginUser
-      const resultAction = await dispatch(loginUser(loginData));
+      const resultAction = await dispatch(loginUserSuccess(loginData));
 
       // Vérifiez si l'action a été résolue avec succès
       if (loginUserSuccess.match(resultAction)) {
@@ -37,8 +38,8 @@ function SignIn() {
           sessionStorage.setItem('token', token);
         }
 
-        // Appel de l'action asynchrone fetchUserProfile avec le token
-        await dispatch(fetchUserProfile(token));
+        // Appel de l'action asynchrone updateUserProfile avec le token
+        await dispatch(updateUserProfile({ token, updatedProfileData: {} }));
 
         // Redirigez vers le profil utilisateur après la connexion réussie
         navigate('/user-profile');
@@ -100,6 +101,8 @@ function SignIn() {
             <Button text={loading ? 'Signing In...' : 'Sign In'} onClick={handleSignIn} disabled={loading} />
           </form>
           {error && <p style={{ color: 'red' }}>{error}</p>}
+          {/* Utilisez Link pour rediriger vers la page de mise à jour du profil */}
+          
         </section>
       </main>
       <Footer />
@@ -108,8 +111,4 @@ function SignIn() {
 }
 
 export default SignIn;
-
-
-
-
 
